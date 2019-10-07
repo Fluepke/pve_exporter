@@ -53,7 +53,7 @@ type lxc struct {
 	CpuCount  json.Number `json:"cpus"`
 	CpuUsage  json.Number `json:"cpu"`
 	DiskTotal json.Number `json:"maxdisk"`
-	DiskFree  json.Number `json:"disk"`
+	DiskUsed  json.Number `json:"disk"`
 	DiskRead  json.Number `json:"diskread"`
 	DiskWrite json.Number `json:"diskwrite"`
 	RamTotal  json.Number `json:"maxmem"`
@@ -309,9 +309,9 @@ var (
 		"Disk size for each LXC",
 		[]string{"node", "lxc"}, nil,
 	)
-	clusterLxcDiskFree = prometheus.NewDesc(
-		prometheus.BuildFQName(nameSpace, "lxc", "disk_free"),
-		"Free disk space for each LXC",
+	clusterLxcDiskUsed = prometheus.NewDesc(
+		prometheus.BuildFQName(nameSpace, "lxc", "disk_used"),
+		"Used disk space for each LXC",
 		[]string{"node", "lxc"}, nil,
 	)
 	clusterLxcDiskRead = prometheus.NewDesc(
@@ -546,7 +546,7 @@ func (e Exporter) Collect(ch chan<- prometheus.Metric) {
 						clusterLxcDiskTotal, prometheus.GaugeValue, jNumberToFloat(lxc.DiskTotal), node.Name, lxc.Name,
 					)
 					ch <- prometheus.MustNewConstMetric(
-						clusterLxcDiskFree, prometheus.GaugeValue, jNumberToFloat(lxc.DiskFree), node.Name, lxc.Name,
+						clusterLxcDiskUsed, prometheus.GaugeValue, jNumberToFloat(lxc.DiskUsed), node.Name, lxc.Name,
 					)
 					ch <- prometheus.MustNewConstMetric(
 						clusterLxcDiskRead, prometheus.GaugeValue, jNumberToFloat(lxc.DiskRead), node.Name, lxc.Name,
